@@ -39,8 +39,8 @@ jobs:
         with:
           push: true  # push image ขึ้น registry ทันทีหลัง build เสร็จ
           tags: |
-            ${{ env.IMAGE }}:latest              # tag ล่าสุดเสมอ
-            ${{ env.IMAGE }}:${{ github.sha }}   # tag ด้วย commit SHA เพื่อ traceability
+            ${{ env.IMAGE }}:latest
+            ${{ env.IMAGE }}:${{ github.sha }}
 
   # ========================================
   # Job 2: deploy — Deploy ขึ้น Kubernetes
