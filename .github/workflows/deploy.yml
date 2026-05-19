@@ -57,7 +57,7 @@ jobs:
       - name: Set kubeconfig
         run: |
           mkdir -p ~/.kube
-          echo "${{ secrets.KUBECONFIG }}" | tr -d '\n' | base64 -d > ~/.kube/config
+          printf '%s' "${{ secrets.KUBECONFIG }}" > ~/.kube/config
 
       # แทนที่ placeholder IMAGE_TAG ในไฟล์ deployment.yaml ด้วย commit SHA จริง
       - name: Update image tag
