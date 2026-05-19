@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: portfolio
-          image: ghcr.io/YOUR_USERNAME/portfolio:IMAGE_TAG
+          image: ghcr.io/stonegtm/portfolio:IMAGE_TAG
           ports:
             - containerPort: 3000
           resources:
