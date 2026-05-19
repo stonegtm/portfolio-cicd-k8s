@@ -1,0 +1,69 @@
+# ชื่อของ workflow นี้ที่จะแสดงใน GitHub Actions
+name: Build & Deploy to K8s
+
+# กำหนดเงื่อนไขที่จะ trigger workflow นี้
+on:
+  push:
+    branches: [main] # รันเมื่อมีการ push โค้ดขึ้น branch main เท่านั้น
+
+# ตัวแปร environment ที่ใช้ร่วมกันทั้ง workflow
+env:
+  # ชื่อ Docker image ที่จะ push ไปเก็บที่ GitHub Container Registry (GHCR)
+  IMAGE: ghcr.io/${{ github.repository_owner }}/portfolio
+
+jobs:
+  # ========================================
+  # Job 1: build-push — Build และ Push Docker Image
+  # ========================================
+  build-push:
+    runs-on: ubuntu-latest # รันบน runner Ubuntu ล่าสุด
+    permissions:
+      contents: read   # อ่านโค้ดใน repository ได้
+      packages: write  # push package (Docker image) ขึ้น GHCR ได้
+
+    steps:
+      # ดึงโค้ดจาก repository ลงมาบน runner
+      - uses: actions/checkout@v4
+
+      # เข้าสู่ระบบ GitHub Container Registry เพื่อให้ push image ได้
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}        # ใช้ชื่อผู้ที่ trigger workflow
+          password: ${{ secrets.GITHUB_TOKEN }} # ใช้ token อัตโนมัติจาก GitHub
+
+      # Build Docker image จาก Dockerfile แล้ว push ขึ้น GHCR พร้อมกัน
+      - name: Build & Push Image
+        uses: docker/build-push-action@v5
+        with:
+          push: true  # push image ขึ้น registry ทันทีหลัง build เสร็จ
+          tags: |
+            ${{ env.IMAGE }}:latest              # tag ล่าสุดเสมอ
+            ${{ env.IMAGE }}:${{ github.sha }}   # tag ด้วย commit SHA เพื่อ traceability
+
+  # ========================================
+  # Job 2: deploy — Deploy ขึ้น Kubernetes
+  # ========================================
+  deploy:
+    needs: build-push  # รอให้ Job build-push สำเร็จก่อน จึงจะเริ่ม deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      # ดึงโค้ดจาก repository ลงมาบน runner (เพื่อใช้ไฟล์ k8s/)
+      - uses: actions/checkout@v4
+
+      # ตั้งค่า kubeconfig เพื่อให้ kubectl เชื่อมต่อ Kubernetes cluster ได้
+      - name: Set kubeconfig
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config  # เขียน kubeconfig จาก secret ลงไฟล์
+
+      # แทนที่ placeholder IMAGE_TAG ในไฟล์ deployment.yaml ด้วย commit SHA จริง
+      - name: Update image tag
+        run: |
+          sed -i "s|IMAGE_TAG|${{ github.sha }}|g" k8s/deployment.yaml
+
+      # สั่ง Kubernetes apply ไฟล์ config ทั้งหมดในโฟลเดอร์ k8s/ เพื่อ deploy
+      - name: Apply to K8s
+        run: kubectl apply -f k8s/
