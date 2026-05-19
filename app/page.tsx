@@ -248,6 +248,13 @@ const experience = [
 
 const projects = [
   {
+    title: "Portfolio CI/CD & Kubernetes",
+    type: "DevOps · 2026",
+    description:
+      "End-to-end CI/CD pipeline deploying a Next.js portfolio to a self-hosted k3s cluster on a VPS. Automated build, container registry push, and zero-touch deployment on every push to main.",
+    tags: ["Next.js", "Docker", "GitHub Actions", "k3s", "Kubernetes", "GHCR"],
+  },
+  {
     title: "Point of Sale System",
     type: "Full-Stack",
     description:
