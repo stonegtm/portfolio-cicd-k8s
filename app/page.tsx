@@ -1,4 +1,311 @@
+"use client";
+
+import { useState } from "react";
+
+type Locale = "en" | "th";
+
+/* ─── Translations ──────────────────────────────────────────────────────────── */
+
+const t = {
+  en: {
+    nav: { skills: "Skills", experience: "Experience", projects: "Projects", contact: "Contact" },
+    hero: {
+      badge: "Open to opportunities",
+      title: "Senior Full-Stack Developer",
+      summary: (
+        <>
+          Full-stack developer with{" "}
+          <span className="text-white">5+ years of experience</span> building
+          web applications, APIs, CRM platforms, POS systems, and data-driven
+          services. Comfortable owning features end-to-end — from requirement
+          discussion to deployment.
+        </>
+      ),
+      location: "Bangkok, Thailand",
+    },
+    sections: {
+      skills: "Core Skills",
+      experience: "Experience",
+      projects: "Selected Projects",
+      education: "Education",
+      contact: "Contact",
+    },
+    skillGroups: {
+      languages: "Languages",
+      frontend: "Front-End",
+      backend: "Back-End",
+      database: "Database",
+      devops: "DevOps & Tools",
+    },
+    education: {
+      school: "Rajabhat Maha Sarakham University",
+      degree: "Bachelor of Computer Technology",
+    },
+    footer: "Built with Next.js & Tailwind CSS",
+    experience: [
+      {
+        company: "LOMR Company Limited",
+        role: "Senior Full-Stack Developer",
+        period: "Sep 2024 – Dec 2025",
+        bullets: [
+          "Developed a CRM platform for partner brand Charmiss, working closely with stakeholders to plan sprints and deliver features.",
+          "Led end-to-end development of mission-based engagement features including coin accumulation and stamp missions.",
+          "Built CRM UI and API routes with SolidStart, using MongoDB as the primary data store.",
+          "Coordinated via Slack, Gather, Jira, and GitLab for daily workflows, version control, and CI/CD.",
+        ],
+        tags: ["SolidStart", "MongoDB", "GitLab CI/CD", "Jira"],
+      },
+      {
+        company: "Extend IT Resource Co., Ltd.",
+        role: "Back-End Developer",
+        period: "Sep 2023 – Aug 2024",
+        bullets: [
+          "Designed and developed scalable microservices and RESTful APIs for ticket and incident management systems.",
+          "Built an incident management platform for cyber incident reporting in collaboration with the government sector.",
+          "Used NestJS, PostgreSQL, Docker, and GitLab for maintainable backend services and reproducible deployments.",
+        ],
+        tags: ["NestJS", "PostgreSQL", "Docker", "Microservices"],
+      },
+      {
+        company: "Digital Economy & Society (on-site at Frasers Property)",
+        role: "Software Developer",
+        period: "Apr 2023 – Sep 2023",
+        bullets: [
+          "Developed a face detection and people-counting system with demographic analysis (gender, age estimation).",
+          "Built API services with FastAPI to connect ML models to the front-end.",
+          "Implemented a responsive Vue 3 + TypeScript front-end for real-time monitoring.",
+        ],
+        tags: ["FastAPI", "Vue 3", "TypeScript", "Python"],
+      },
+      {
+        company: "CTO Solution Co., Ltd. (on-site at PTT Digital)",
+        role: "Back-End Web Developer",
+        period: "Jul 2022 – Feb 2023",
+        bullets: [
+          "Developed data display and request-handling services with Node.js (Restify, Express).",
+          "Integrated MongoDB and SQL Server for NoSQL and relational storage.",
+          "Built structured RESTful services for scalable data retrieval and backend integration.",
+        ],
+        tags: ["Node.js", "Express", "Restify", "MongoDB", "SQL Server"],
+      },
+      {
+        company: "KORISTA Co., Ltd.",
+        role: "Full-Stack Web Developer",
+        period: "Oct 2021 – Jun 2022",
+        bullets: [
+          "Developed an e-commerce platform for imported products using Nuxt.js, AdonisJS, and MySQL.",
+          "Implemented product catalog, dynamic search/filter, authentication, cart, checkout, and admin management.",
+        ],
+        tags: ["Nuxt.js", "AdonisJS", "MySQL"],
+      },
+      {
+        company: "Sofat Co., Ltd.",
+        role: "Programmer",
+        period: "Jul 2020 – Sep 2021",
+        bullets: [
+          "Developed advertisement management websites with PHP Laravel and WordPress.",
+          "Customized backend functionality and WordPress integration for content and ad workflows.",
+        ],
+        tags: ["PHP", "Laravel", "WordPress"],
+      },
+    ],
+    projects: [
+      {
+        title: "Portfolio CI/CD & Kubernetes",
+        type: "DevOps · 2026",
+        description:
+          "End-to-end CI/CD pipeline deploying a Next.js portfolio to a self-hosted k3s cluster on a VPS. Automated build, container registry push, and zero-touch deployment on every push to main.",
+        tags: ["Next.js", "Docker", "GitHub Actions", "k3s", "Kubernetes", "GHCR"],
+        href: undefined as string | undefined,
+      },
+      {
+        title: "Bot Auto-Play Big Helmets",
+        type: "Game Bot · 2026",
+        description:
+          "Python bot that auto-plays Big Helmets: Heroes of Destiny using computer vision and template matching to detect on-screen states and trigger actions automatically.",
+        tags: ["Python", "OpenCV", "PyAutoGUI", "PIL", "Computer Vision"],
+        href: "https://github.com/stonegtm/bot-auto-play-big-helmets",
+      },
+      {
+        title: "Point of Sale System",
+        type: "Full-Stack",
+        description:
+          "POS system for store product management with full inventory and transaction workflows.",
+        tags: ["Next.js", "NestJS", "PostgreSQL", "Docker", "Nginx"],
+        href: undefined as string | undefined,
+      },
+      {
+        title: "Quiz Application",
+        type: "Mobile",
+        description:
+          "Mobile quiz app to practice screen flows, state management, and user interaction patterns.",
+        tags: ["React Native", "Expo"],
+        href: undefined as string | undefined,
+      },
+      {
+        title: "Telegram Todo Automation",
+        type: "n8n Workflow · 2026",
+        description:
+          "No-code automation connecting Telegram, Google Sheets, and notification services for task management.",
+        tags: ["n8n", "Telegram Bot", "Google Sheets"],
+        href: undefined as string | undefined,
+      },
+    ],
+  },
+
+  th: {
+    nav: { skills: "ทักษะ", experience: "ประสบการณ์", projects: "โปรเจกต์", contact: "ติดต่อ" },
+    hero: {
+      badge: "เปิดรับโอกาสใหม่",
+      title: "นักพัฒนา Full-Stack อาวุโส",
+      summary: (
+        <>
+          นักพัฒนา Full-Stack ที่มีประสบการณ์{" "}
+          <span className="text-white">มากกว่า 5 ปี</span>{" "}
+          ในการสร้างเว็บแอปพลิเคชัน, API, แพลตฟอร์ม CRM, ระบบ POS
+          และบริการที่ขับเคลื่อนด้วยข้อมูล พร้อมดูแลฟีเจอร์ตั้งแต่ต้นจนจบ
+          — ตั้งแต่คุยรีไควร์เมนต์จนถึงการ deploy
+        </>
+      ),
+      location: "กรุงเทพมหานคร, ไทย",
+    },
+    sections: {
+      skills: "ทักษะหลัก",
+      experience: "ประสบการณ์",
+      projects: "โปรเจกต์เด่น",
+      education: "การศึกษา",
+      contact: "ติดต่อ",
+    },
+    skillGroups: {
+      languages: "ภาษาโปรแกรม",
+      frontend: "ฟร้อนต์เอนด์",
+      backend: "แบ็กเอนด์",
+      database: "ฐานข้อมูล",
+      devops: "DevOps & เครื่องมือ",
+    },
+    education: {
+      school: "มหาวิทยาลัยราชภัฏมหาสารคาม",
+      degree: "วิทยาศาสตรบัณฑิต สาขาเทคโนโลยีคอมพิวเตอร์",
+    },
+    footer: "สร้างด้วย Next.js & Tailwind CSS",
+    experience: [
+      {
+        company: "LOMR Company Limited",
+        role: "Senior Full-Stack Developer",
+        period: "ก.ย. 2567 – ธ.ค. 2568",
+        bullets: [
+          "พัฒนาแพลตฟอร์ม CRM สำหรับแบรนด์พาร์ตเนอร์ Charmiss ทำงานร่วมกับผู้มีส่วนได้ส่วนเสียในการวางแผน sprint และส่งมอบฟีเจอร์",
+          "นำการพัฒนา end-to-end ของฟีเจอร์ mission-based engagement รวมถึง mission สะสมเหรียญและ stamp",
+          "พัฒนา CRM UI และ API routes ด้วย SolidStart โดยใช้ MongoDB เป็น data store หลัก",
+          "ประสานงานทีมผ่าน Slack, Gather, Jira และ GitLab สำหรับ workflow ประจำวัน, version control และ CI/CD",
+        ],
+        tags: ["SolidStart", "MongoDB", "GitLab CI/CD", "Jira"],
+      },
+      {
+        company: "Extend IT Resource Co., Ltd.",
+        role: "Back-End Developer",
+        period: "ก.ย. 2566 – ส.ค. 2567",
+        bullets: [
+          "ออกแบบและพัฒนา microservices และ RESTful APIs สำหรับระบบจัดการตั๋วและระบบจัดการเหตุการณ์",
+          "พัฒนาแพลตฟอร์มจัดการเหตุการณ์ไซเบอร์สำหรับภาครัฐ",
+          "ใช้ NestJS, PostgreSQL, Docker และ GitLab เพื่อรองรับ backend services ที่บำรุงรักษาง่ายและ deployment ที่ reproduce ได้",
+        ],
+        tags: ["NestJS", "PostgreSQL", "Docker", "Microservices"],
+      },
+      {
+        company: "สำนักงานเศรษฐกิจดิจิทัล (ประจำ Frasers Property)",
+        role: "Software Developer",
+        period: "เม.ย. 2566 – ก.ย. 2566",
+        bullets: [
+          "พัฒนาระบบตรวจจับใบหน้าและนับจำนวนคนพร้อมวิเคราะห์ข้อมูลประชากร (เพศ, ช่วงอายุ)",
+          "พัฒนา API services ด้วย FastAPI เพื่อเชื่อมต่อ ML model กับ front-end",
+          "พัฒนา front-end responsive ด้วย Vue 3 + TypeScript สำหรับการแสดงผลแบบ real-time",
+        ],
+        tags: ["FastAPI", "Vue 3", "TypeScript", "Python"],
+      },
+      {
+        company: "CTO Solution Co., Ltd. (ประจำ PTT Digital)",
+        role: "Back-End Web Developer",
+        period: "ก.ค. 2565 – ก.พ. 2566",
+        bullets: [
+          "พัฒนาบริการแสดงข้อมูลและจัดการ request ด้วย Node.js (Restify, Express)",
+          "เชื่อมต่อ MongoDB และ SQL Server สำหรับเก็บข้อมูล NoSQL และ relational",
+          "สร้าง RESTful services ที่มีโครงสร้างชัดเจนสำหรับ scalable data retrieval",
+        ],
+        tags: ["Node.js", "Express", "Restify", "MongoDB", "SQL Server"],
+      },
+      {
+        company: "KORISTA Co., Ltd.",
+        role: "Full-Stack Web Developer",
+        period: "ต.ค. 2564 – มิ.ย. 2565",
+        bullets: [
+          "พัฒนาแพลตฟอร์ม e-commerce สำหรับสินค้านำเข้าด้วย Nuxt.js, AdonisJS และ MySQL",
+          "ติดตั้งระบบ catalog สินค้า, ค้นหา/กรอง, authentication, ตะกร้าสินค้า, checkout, ติดตามออเดอร์ และ admin",
+        ],
+        tags: ["Nuxt.js", "AdonisJS", "MySQL"],
+      },
+      {
+        company: "Sofat Co., Ltd.",
+        role: "Programmer",
+        period: "ก.ค. 2563 – ก.ย. 2564",
+        bullets: [
+          "พัฒนาเว็บไซต์จัดการโฆษณาด้วย PHP Laravel และ WordPress",
+          "ปรับแต่ง backend และ WordPress integration สำหรับงานอัปเดตเนื้อหาและจัดการโฆษณา",
+        ],
+        tags: ["PHP", "Laravel", "WordPress"],
+      },
+    ],
+    projects: [
+      {
+        title: "Portfolio CI/CD & Kubernetes",
+        type: "DevOps · 2026",
+        description:
+          "pipeline CI/CD ครบวงจร deploy Next.js portfolio ไปยัง k3s cluster ที่ host เองบน VPS build อัตโนมัติ, push ไป container registry และ deploy เองทุกครั้งที่ push ไป main",
+        tags: ["Next.js", "Docker", "GitHub Actions", "k3s", "Kubernetes", "GHCR"],
+        href: undefined as string | undefined,
+      },
+      {
+        title: "Bot Auto-Play Big Helmets",
+        type: "Game Bot · 2026",
+        description:
+          "Python bot ที่เล่นเกม Big Helmets: Heroes of Destiny แบบอัตโนมัติ ใช้ computer vision และ template matching ตรวจจับสถานะหน้าจอและสั่งคลิกได้เอง",
+        tags: ["Python", "OpenCV", "PyAutoGUI", "PIL", "Computer Vision"],
+        href: "https://github.com/stonegtm/bot-auto-play-big-helmets",
+      },
+      {
+        title: "ระบบ Point of Sale",
+        type: "Full-Stack",
+        description:
+          "ระบบ POS สำหรับจัดการสินค้าในร้านค้า พร้อม workflow การจัดการ inventory และธุรกรรมครบถ้วน",
+        tags: ["Next.js", "NestJS", "PostgreSQL", "Docker", "Nginx"],
+        href: undefined as string | undefined,
+      },
+      {
+        title: "แอปพลิเคชัน Quiz",
+        type: "Mobile",
+        description:
+          "แอปควิซบนมือถือสำหรับฝึกการออกแบบ screen flows, state management และ user interaction",
+        tags: ["React Native", "Expo"],
+        href: undefined as string | undefined,
+      },
+      {
+        title: "Telegram Todo Automation",
+        type: "n8n Workflow · 2026",
+        description:
+          "automation ไม่ต้องเขียนโค้ด เชื่อม Telegram, Google Sheets และบริการแจ้งเตือนสำหรับจัดการ task",
+        tags: ["n8n", "Telegram Bot", "Google Sheets"],
+        href: undefined as string | undefined,
+      },
+    ],
+  },
+} as const;
+
+/* ─── Page ──────────────────────────────────────────────────────────────────── */
+
 export default function Home() {
+  const [locale, setLocale] = useState<Locale>("en");
+  const T = t[locale];
+
   return (
     <div className="min-h-screen bg-[#0f0f0f] text-zinc-100 font-[family-name:var(--font-geist-sans)]">
       {/* Nav */}
@@ -7,11 +314,20 @@ export default function Home() {
           <span className="font-[family-name:var(--font-geist-mono)] text-sm text-zinc-400">
             samabat.dev
           </span>
-          <div className="flex gap-6 text-sm text-zinc-400">
-            <a href="#skills" className="hover:text-white transition-colors">Skills</a>
-            <a href="#experience" className="hover:text-white transition-colors">Experience</a>
-            <a href="#projects" className="hover:text-white transition-colors">Projects</a>
-            <a href="#contact" className="hover:text-white transition-colors">Contact</a>
+          <div className="flex items-center gap-6">
+            <div className="hidden sm:flex gap-6 text-sm text-zinc-400">
+              <a href="#skills" className="hover:text-white transition-colors">{T.nav.skills}</a>
+              <a href="#experience" className="hover:text-white transition-colors">{T.nav.experience}</a>
+              <a href="#projects" className="hover:text-white transition-colors">{T.nav.projects}</a>
+              <a href="#contact" className="hover:text-white transition-colors">{T.nav.contact}</a>
+            </div>
+            <button
+              onClick={() => setLocale(locale === "en" ? "th" : "en")}
+              className="flex items-center gap-1.5 rounded-lg border border-zinc-700 bg-zinc-800/50 px-3 py-1.5 text-xs font-medium text-zinc-300 hover:border-zinc-500 hover:text-white transition-all"
+            >
+              <span>{locale === "en" ? "🇹🇭" : "🇬🇧"}</span>
+              <span>{locale === "en" ? "ภาษาไทย" : "English"}</span>
+            </button>
           </div>
         </div>
       </nav>
@@ -21,25 +337,17 @@ export default function Home() {
         <section className="space-y-6">
           <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs text-emerald-400">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            Open to opportunities
+            {T.hero.badge}
           </div>
 
           <div>
             <h1 className="text-5xl font-bold tracking-tight text-white sm:text-6xl">
               Samabat Yamsopa
             </h1>
-            <p className="mt-3 text-xl text-zinc-400 font-light">
-              Senior Full-Stack Developer
-            </p>
+            <p className="mt-3 text-xl text-zinc-400 font-light">{T.hero.title}</p>
           </div>
 
-          <p className="max-w-2xl text-zinc-400 leading-relaxed">
-            Full-stack developer with{" "}
-            <span className="text-white">5+ years of experience</span> building
-            web applications, APIs, CRM platforms, POS systems, and data-driven
-            services. Comfortable owning features end-to-end — from requirement
-            discussion to deployment.
-          </p>
+          <p className="max-w-2xl text-zinc-400 leading-relaxed">{T.hero.summary}</p>
 
           <div className="flex flex-wrap gap-3">
             <a
@@ -62,88 +370,50 @@ export default function Home() {
             </a>
             <span className="flex items-center gap-2 rounded-lg border border-zinc-700 bg-zinc-800/50 px-4 py-2 text-sm text-zinc-300">
               <LocationIcon />
-              Bangkok, Thailand
+              {T.hero.location}
             </span>
           </div>
         </section>
 
         {/* Skills */}
         <section id="skills" className="space-y-8">
-          <SectionHeading label="Core Skills" />
+          <SectionHeading label={T.sections.skills} />
           <div className="grid gap-5 sm:grid-cols-2">
+            <SkillGroup title={T.skillGroups.languages} color="violet" skills={["JavaScript", "TypeScript", "Python", "Java"]} />
             <SkillGroup
-              title="Languages"
-              color="violet"
-              skills={["JavaScript", "TypeScript", "Python", "Java"]}
-            />
-            <SkillGroup
-              title="Front-End"
+              title={T.skillGroups.frontend}
               color="sky"
-              skills={[
-                "SolidJS / SolidStart",
-                "Next.js",
-                "Vue 3 / Nuxt.js",
-                "React Native Expo",
-                "Tailwind CSS",
-                "Ant Design",
-                "Vuetify",
-                "Bootstrap",
-              ]}
+              skills={["SolidJS / SolidStart", "Next.js", "Vue 3 / Nuxt.js", "React Native Expo", "Tailwind CSS", "Ant Design", "Vuetify", "Bootstrap"]}
             />
             <SkillGroup
-              title="Back-End"
+              title={T.skillGroups.backend}
               color="emerald"
-              skills={[
-                "Node.js",
-                "NestJS",
-                "Express",
-                "AdonisJS",
-                "Restify",
-                "FastAPI",
-                "RESTful APIs",
-                "Microservices",
-                "Auth / Authorization",
-              ]}
+              skills={["Node.js", "NestJS", "Express", "AdonisJS", "Restify", "FastAPI", "RESTful APIs", "Microservices", "Auth / Authorization"]}
             />
+            <SkillGroup title={T.skillGroups.database} color="amber" skills={["MongoDB", "PostgreSQL", "MySQL", "SQL Server"]} />
             <SkillGroup
-              title="Database"
-              color="amber"
-              skills={["MongoDB", "PostgreSQL", "MySQL", "SQL Server"]}
-            />
-            <SkillGroup
-              title="DevOps & Tools"
+              title={T.skillGroups.devops}
               color="rose"
-              skills={[
-                "Docker",
-                "Kubernetes (kubectl)",
-                "GitHub Actions (CI/CD)",
-                "GitLab CI/CD",
-                "Nginx",
-                "AWS EC2",
-                "Ubuntu",
-                "Jira",
-                "Postman",
-                "Figma",
-              ]}
+              skills={["Docker", "Kubernetes (kubectl)", "GitHub Actions (CI/CD)", "GitLab CI/CD", "Nginx", "AWS EC2", "Ubuntu", "Jira", "Postman", "Figma"]}
             />
           </div>
         </section>
 
         {/* Experience */}
         <section id="experience" className="space-y-8">
-          <SectionHeading label="Experience" />
+          <SectionHeading label={T.sections.experience} />
           <div className="space-y-0">
-            {experience.map((job, i) => (
-              <ExperienceCard key={i} {...job} isLast={i === experience.length - 1} />
+            {T.experience.map((job, i) => (
+              <ExperienceCard key={i} {...job} isLast={i === T.experience.length - 1} />
             ))}
           </div>
         </section>
 
         {/* Projects */}
         <section id="projects" className="space-y-8">
-          <SectionHeading label="Selected Projects" />
+          <SectionHeading label={T.sections.projects} />
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {projects.map((p, i) => (
+            {T.projects.map((p, i) => (
               <ProjectCard key={i} {...p} />
             ))}
           </div>
@@ -151,16 +421,16 @@ export default function Home() {
 
         {/* Education */}
         <section className="space-y-4">
-          <SectionHeading label="Education" />
+          <SectionHeading label={T.sections.education} />
           <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-5">
-            <p className="font-semibold text-white">Rajabhat Maha Sarakham University</p>
-            <p className="text-sm text-zinc-400 mt-1">Bachelor of Computer Technology</p>
+            <p className="font-semibold text-white">{T.education.school}</p>
+            <p className="text-sm text-zinc-400 mt-1">{T.education.degree}</p>
           </div>
         </section>
 
         {/* Contact */}
         <section id="contact" className="space-y-4">
-          <SectionHeading label="Contact" />
+          <SectionHeading label={T.sections.contact} />
           <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 flex flex-wrap gap-6">
             <ContactItem icon={<EmailIcon />} label="tonevongola@gmail.com" href="mailto:tonevongola@gmail.com" />
             <ContactItem icon={<PhoneIcon />} label="065-272-8472" />
@@ -170,121 +440,18 @@ export default function Home() {
       </main>
 
       <footer className="border-t border-zinc-800 py-8 text-center text-sm text-zinc-600">
-        © 2025 Samabat Yamsopa · Built with Next.js & Tailwind CSS
+        © 2025 Samabat Yamsopa · {T.footer}
       </footer>
     </div>
   );
 }
-
-/* ─── Data ─────────────────────────────────────────────────────────────────── */
-
-const experience = [
-  {
-    company: "LOMR Company Limited",
-    role: "Senior Full-Stack Developer",
-    period: "Sep 2024 – Dec 2025",
-    bullets: [
-      "Developed a CRM platform for partner brand Charmiss, working closely with stakeholders to plan sprints and deliver features.",
-      "Led end-to-end development of mission-based engagement features including coin accumulation and stamp missions.",
-      "Built CRM UI and API routes with SolidStart, using MongoDB as the primary data store.",
-      "Coordinated via Slack, Gather, Jira, and GitLab for daily workflows, version control, and CI/CD.",
-    ],
-    tags: ["SolidStart", "MongoDB", "GitLab CI/CD", "Jira"],
-  },
-  {
-    company: "Extend IT Resource Co., Ltd.",
-    role: "Back-End Developer",
-    period: "Sep 2023 – Aug 2024",
-    bullets: [
-      "Designed and developed scalable microservices and RESTful APIs for ticket and incident management systems.",
-      "Built an incident management platform for cyber incident reporting in collaboration with the government sector.",
-      "Used NestJS, PostgreSQL, Docker, and GitLab for maintainable backend services and reproducible deployments.",
-    ],
-    tags: ["NestJS", "PostgreSQL", "Docker", "Microservices"],
-  },
-  {
-    company: "Digital Economy & Society (on-site at Frasers Property)",
-    role: "Software Developer",
-    period: "Apr 2023 – Sep 2023",
-    bullets: [
-      "Developed a face detection and people-counting system with demographic analysis (gender, age estimation).",
-      "Built API services with FastAPI to connect ML models to the front-end.",
-      "Implemented a responsive Vue 3 + TypeScript front-end for real-time monitoring.",
-    ],
-    tags: ["FastAPI", "Vue 3", "TypeScript", "Python"],
-  },
-  {
-    company: "CTO Solution Co., Ltd. (on-site at PTT Digital)",
-    role: "Back-End Web Developer",
-    period: "Jul 2022 – Feb 2023",
-    bullets: [
-      "Developed data display and request-handling services with Node.js (Restify, Express).",
-      "Integrated MongoDB and SQL Server for NoSQL and relational storage.",
-      "Built structured RESTful services for scalable data retrieval and backend integration.",
-    ],
-    tags: ["Node.js", "Express", "Restify", "MongoDB", "SQL Server"],
-  },
-  {
-    company: "KORISTA Co., Ltd.",
-    role: "Full-Stack Web Developer",
-    period: "Oct 2021 – Jun 2022",
-    bullets: [
-      "Developed an e-commerce platform for imported products using Nuxt.js, AdonisJS, and MySQL.",
-      "Implemented product catalog, dynamic search/filter, authentication, cart, checkout, and admin management.",
-    ],
-    tags: ["Nuxt.js", "AdonisJS", "MySQL"],
-  },
-  {
-    company: "Sofat Co., Ltd.",
-    role: "Programmer",
-    period: "Jul 2020 – Sep 2021",
-    bullets: [
-      "Developed advertisement management websites with PHP Laravel and WordPress.",
-      "Customized backend functionality and WordPress integration for content and ad workflows.",
-    ],
-    tags: ["PHP", "Laravel", "WordPress"],
-  },
-];
-
-const projects = [
-  {
-    title: "Portfolio CI/CD & Kubernetes",
-    type: "DevOps · 2026",
-    description:
-      "End-to-end CI/CD pipeline deploying a Next.js portfolio to a self-hosted k3s cluster on a VPS. Automated build, container registry push, and zero-touch deployment on every push to main.",
-    tags: ["Next.js", "Docker", "GitHub Actions", "k3s", "Kubernetes", "GHCR"],
-  },
-  {
-    title: "Point of Sale System",
-    type: "Full-Stack",
-    description:
-      "POS system for store product management with full inventory and transaction workflows.",
-    tags: ["Next.js", "NestJS", "PostgreSQL", "Docker", "Nginx"],
-  },
-  {
-    title: "Quiz Application",
-    type: "Mobile",
-    description:
-      "Mobile quiz app to practice screen flows, state management, and user interaction patterns.",
-    tags: ["React Native", "Expo"],
-  },
-  {
-    title: "Telegram Todo Automation",
-    type: "n8n Workflow · 2026",
-    description:
-      "No-code automation connecting Telegram, Google Sheets, and notification services for task management.",
-    tags: ["n8n", "Telegram Bot", "Google Sheets"],
-  },
-];
 
 /* ─── Components ────────────────────────────────────────────────────────────── */
 
 function SectionHeading({ label }: { label: string }) {
   return (
     <div className="flex items-center gap-4">
-      <h2 className="text-xs font-semibold uppercase tracking-widest text-zinc-500">
-        {label}
-      </h2>
+      <h2 className="text-xs font-semibold uppercase tracking-widest text-zinc-500">{label}</h2>
       <div className="h-px flex-1 bg-zinc-800" />
     </div>
   );
@@ -306,26 +473,13 @@ const titleColorMap: Record<string, string> = {
   rose: "text-rose-400",
 };
 
-function SkillGroup({
-  title,
-  skills,
-  color,
-}: {
-  title: string;
-  skills: string[];
-  color: string;
-}) {
+function SkillGroup({ title, skills, color }: { title: string; skills: string[]; color: string }) {
   return (
     <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-5 space-y-3">
-      <h3 className={`text-xs font-semibold uppercase tracking-wider ${titleColorMap[color]}`}>
-        {title}
-      </h3>
+      <h3 className={`text-xs font-semibold uppercase tracking-wider ${titleColorMap[color]}`}>{title}</h3>
       <div className="flex flex-wrap gap-2">
         {skills.map((s) => (
-          <span
-            key={s}
-            className={`rounded-md border px-2.5 py-1 text-xs font-medium ${colorMap[color]}`}
-          >
+          <span key={s} className={`rounded-md border px-2.5 py-1 text-xs font-medium ${colorMap[color]}`}>
             {s}
           </span>
         ))}
@@ -335,37 +489,23 @@ function SkillGroup({
 }
 
 function ExperienceCard({
-  company,
-  role,
-  period,
-  bullets,
-  tags,
-  isLast,
+  company, role, period, bullets, tags, isLast,
 }: {
-  company: string;
-  role: string;
-  period: string;
-  bullets: string[];
-  tags: string[];
-  isLast: boolean;
+  company: string; role: string; period: string; bullets: readonly string[]; tags: readonly string[]; isLast: boolean;
 }) {
   return (
     <div className="relative flex gap-5">
-      {/* Timeline line */}
       <div className="flex flex-col items-center">
         <div className="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full border-2 border-emerald-500 bg-[#0f0f0f]" />
         {!isLast && <div className="flex-1 w-px bg-zinc-800 my-1" />}
       </div>
-
-      <div className={`pb-10 space-y-3 ${isLast ? "pb-0" : ""}`}>
+      <div className={`space-y-3 ${isLast ? "pb-0" : "pb-10"}`}>
         <div>
           <p className="font-semibold text-white">{company}</p>
           <div className="flex flex-wrap items-center gap-2 mt-0.5">
             <span className="text-sm text-zinc-400">{role}</span>
             <span className="text-zinc-700">·</span>
-            <span className="font-[family-name:var(--font-geist-mono)] text-xs text-zinc-500">
-              {period}
-            </span>
+            <span className="font-[family-name:var(--font-geist-mono)] text-xs text-zinc-500">{period}</span>
           </div>
         </div>
         <ul className="space-y-1.5">
@@ -377,13 +517,8 @@ function ExperienceCard({
           ))}
         </ul>
         <div className="flex flex-wrap gap-2">
-          {tags.map((t) => (
-            <span
-              key={t}
-              className="rounded-md bg-zinc-800 px-2 py-0.5 text-xs text-zinc-400"
-            >
-              {t}
-            </span>
+          {tags.map((tag) => (
+            <span key={tag} className="rounded-md bg-zinc-800 px-2 py-0.5 text-xs text-zinc-400">{tag}</span>
           ))}
         </div>
       </div>
@@ -392,64 +527,51 @@ function ExperienceCard({
 }
 
 function ProjectCard({
-  title,
-  type,
-  description,
-  tags,
+  title, type, description, tags, href,
 }: {
-  title: string;
-  type: string;
-  description: string;
-  tags: string[];
+  title: string; type: string; description: string; tags: readonly string[]; href?: string;
 }) {
-  return (
-    <div className="group rounded-xl border border-zinc-800 bg-zinc-900/50 p-5 space-y-3 hover:border-zinc-600 transition-colors">
-      <div>
-        <p className="font-semibold text-white group-hover:text-emerald-400 transition-colors">
-          {title}
-        </p>
-        <p className="text-xs text-zinc-500 mt-0.5">{type}</p>
+  const inner = (
+    <>
+      <div className="flex items-start justify-between gap-2">
+        <div>
+          <p className="font-semibold text-white group-hover:text-emerald-400 transition-colors">{title}</p>
+          <p className="text-xs text-zinc-500 mt-0.5">{type}</p>
+        </div>
+        {href && (
+          <span className="shrink-0 mt-0.5 text-zinc-600 group-hover:text-emerald-400 transition-colors">
+            <GithubIcon />
+          </span>
+        )}
       </div>
       <p className="text-sm text-zinc-400 leading-relaxed">{description}</p>
       <div className="flex flex-wrap gap-1.5">
         {tags.map((t) => (
-          <span
-            key={t}
-            className="rounded-md bg-zinc-800 px-2 py-0.5 text-xs text-zinc-500"
-          >
-            {t}
-          </span>
+          <span key={t} className="rounded-md bg-zinc-800 px-2 py-0.5 text-xs text-zinc-500">{t}</span>
         ))}
       </div>
-    </div>
+    </>
   );
-}
 
-function ContactItem({
-  icon,
-  label,
-  href,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  href?: string;
-}) {
-  const cls =
-    "flex items-center gap-2 text-sm text-zinc-400 hover:text-white transition-colors";
   if (href) {
     return (
-      <a href={href} className={cls}>
-        {icon}
-        {label}
+      <a href={href} target="_blank" rel="noopener noreferrer"
+        className="group flex flex-col gap-3 rounded-xl border border-zinc-800 bg-zinc-900/50 p-5 hover:border-zinc-600 transition-colors">
+        {inner}
       </a>
     );
   }
   return (
-    <span className="flex items-center gap-2 text-sm text-zinc-400">
-      {icon}
-      {label}
-    </span>
+    <div className="group flex flex-col gap-3 rounded-xl border border-zinc-800 bg-zinc-900/50 p-5 hover:border-zinc-600 transition-colors">
+      {inner}
+    </div>
   );
+}
+
+function ContactItem({ icon, label, href }: { icon: React.ReactNode; label: string; href?: string }) {
+  const cls = "flex items-center gap-2 text-sm text-zinc-400 hover:text-white transition-colors";
+  if (href) return <a href={href} className={cls}>{icon}{label}</a>;
+  return <span className="flex items-center gap-2 text-sm text-zinc-400">{icon}{label}</span>;
 }
 
 /* ─── Icons ─────────────────────────────────────────────────────────────────── */
